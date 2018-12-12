@@ -1,16 +1,17 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
+import '../home.scss'
 
 class Topic extends Component{
     render(){
         return (
-            <div>
+            <div className="topic-list">
                 {
                     this.props.topicList.map((item)=>{
                         return (
-                            <div key={item.get('id')}>
-                                <span>{item.get('title')}</span>
+                            <div key={item.get('id')} className="topic-item">
                                 <img alt='' src={item.get('imgUrl')} />
+                                <span>{item.get('title')}</span>
                             </div>
                         )
                     })
