@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {actionCreators} from './store'
 import Topic from './components/Topic'
 import List from './components/List'
 import Recommend from './components/Recommend'
@@ -6,6 +8,15 @@ import Writer from './components/Writer'
 import './home.scss'
 
 class Home extends Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            backShow: false
+        }
+    }
+    backTop(){
+        window.scroll(0,0)
+    }
     render(){
         return (
             <div className="home-wrap">
@@ -18,9 +29,38 @@ class Home extends Component{
                     <Recommend/>
                     <Writer/>
                 </div>
+                {this.state.backShow ? <span className="back-top" onClick={this.backTop}>顶部</span> : null}
             </div>
         )
     }
+    componentDidMount(){
+        this.props.changeHomeData()
+        this.bindEvent()
+    }
+    componentWillUnmount(){
+        window.removeEventListener('scroll',this.changeScrollToShow.bind(this))
+    }
+    bindEvent(){
+        window.addEventListener('scroll',this.changeScrollToShow.bind(this))
+    }
+    changeScrollToShow(){
+        if(document.documentElement.scrollTop > 200){
+            this.setState({
+                backShow: true
+            })
+        }else{
+            this.setState({
+                backShow: false
+            })
+        }
+    }
 }
 
-export default Home
+const mapDispatch = (dispatch) => ({
+    changeHomeData(){
+        const action = actionCreators.getHomeData()
+        dispatch(action)
+    }
+})
+
+export default connect(null,mapDispatch)(Home)
